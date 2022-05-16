@@ -1,40 +1,66 @@
-import { getCustomOrders, addCustomOrder, getMetals } from "./database.js"
-
-const buildOrderListItem = (order) => {
+import { getCustomOrders, addCustomOrder, getMetals, getStyles, getSizes, getTypes } from "./database.js"
+const totalPrice = (order) => {
     const metals = getMetals()
-    
-    // Remember that the function you pass to find() must return true/false
-    const foundMetal = metals.find(
-        (metal) => {
-            return metal.id === order.metalId
+    const styles = getStyles()
+    const sizes = getSizes()
+    const types = getTypes()
+    let totalCost = 0;
+    const chosenMetal = metals.find((metal) => {
+        if (metal.id === order.metalId) {
+            totalCost += metal.price
         }
-        )
-        const totalCost = foundMetal.price
-        const costString = totalCost.toLocaleString("en-US", {
-            style: "currency",
-            currency: "USD"
-        })
-        
-        return`<li>
+    }
+    )
+
+    const chosenStyle = styles.find((style) => {
+        if (style.id === order.syleId) {
+            totalCost += style.price
+        }
+    }
+    )
+    const chosenSize = sizes.find((size) => {
+        if (size.id === order.sizeId) {
+            totalCost += size.price
+        }
+    }
+    )
+    const chosenType = types.find((type) => {
+        if (type.id === order.typeId) {
+            totalCost = totalCost * type.priceFactor
+        }
+    }
+    )
+    return totalCost
+}
+
+
+
+
+const buildOrderListItem = (order, costString) => {
+
+    return `<li>
             Order #${order.id} cost ${costString}
             </li>`
-    }
+}
 export const Orders = () => {
     /*
     Can you explain why the state variable has to be inside
     the component function for Orders, but not the others?
     */
-   const orders = getCustomOrders()
-   
-   let html = "<ul>"
-   
-   const listItems = orders.map(buildOrderListItem)
-   
-   
-   html += listItems.join("")
-   html += "</ul>"
-   
-   return html
+    const orders = getCustomOrders()
+    const listItems = orders.map((order) => {
+        let newOrder = totalPrice(order)
+        const costString = newOrder.toLocaleString("en-US", {
+            style: "currency",
+            currency: "USD"
+        })
+        return buildOrderListItem(order, costString)
+    })
+    let html = "<ul>"
+    html += listItems.join("")
+    html += "</ul>"
+
+    return html
 }
 
 document.addEventListener(
@@ -43,7 +69,7 @@ document.addEventListener(
         const itemClicked = clickEvent.target
         if (itemClicked.id === "orderButton") {
             addCustomOrder()
-            
+
         }
     }
-    )
+)

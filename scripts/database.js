@@ -34,7 +34,7 @@ const database = {
             timestamp: 1614659931693
         }
     ],
-    type: [
+    types: [
         {id: 1, type: "ring", priceFactor: 1},
         {id: 2, type: "earings", priceFactor: 2},
         {id: 3, type: "necklace", priceFactor: 3}
@@ -57,6 +57,9 @@ export const getStyles = () => {
  export const getCustomOrders = () => {
      return database.customOrders.map(order => ({...order}))
  }
+ export const getTypes = () => {
+     return database.types.map(type => ({...type}))
+ }
  export const setMetal = (id) => {
     database.orderBuilder.metalId = id
 }
@@ -68,6 +71,10 @@ export const setSize = (id) => {
 export const setStyle = (id) => {
     database.orderBuilder.styleId = id
 }
+export const setType = (id) => {
+    database.orderBuilder.typeId = id
+}
+
 export const addCustomOrder = () => {
     // Copy the current state of user choices
     const newOrder = {...database.orderBuilder}
