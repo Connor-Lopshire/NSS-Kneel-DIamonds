@@ -34,6 +34,13 @@ const database = {
             timestamp: 1614659931693
         }
     ],
+    type: [
+        {id: 1, type: "ring", priceFactor: 1},
+        {id: 2, type: "earings", priceFactor: 2},
+        {id: 3, type: "necklace", priceFactor: 3}
+            
+    
+    ],
     orderBuilder: {},
 }
 
